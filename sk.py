@@ -45,7 +45,7 @@ def check_cidr(cidr_str):
     cidr_range = ipaddress.IPv4Network(cidr_str)
     ip_addresses = [str(ip) for ip in cidr_range.hosts()]
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=500) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         executor.map(check_ip, ip_addresses)
 
 def check_cidrs_from_file(file_path):
