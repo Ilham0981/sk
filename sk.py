@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 bot = telebot.TeleBot('1915896583:AAErqDx6EsDZS5aASNq8eKNicHT5c-7COmA')
-telegram_channel = '@YourChannelUsername'  # Replace with your actual channel username
+telegram_channel = '@ilham_maulana1'  # Replace with your actual channel username
 
 def send_telegram_message(message):
     bot.send_message(telegram_channel, message)
